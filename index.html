@@ -1,306 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Pro Live Editor</title>
-
-<style>
-  body {
-    margin: 0;
-    font-family: Consolas, monospace;
-    background: #1e1e1e;
-    color: #fff;
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
-  }
-
-  .left {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    border-right: 2px solid #333;
-    min-width: 150px;
-  }
-
-  .right {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 150px;
-  }
-
-  .resizer {
-    width: 6px;
-    background: #444;
-    cursor: col-resize;
-    touch-action: none;
-  }
-
-  .resizer.active {
-    background: #007acc;
-  }
-
-  .tabs {
-    display: flex;
-    background: #2d2d2d;
-  }
-
-  .tab {
-    padding: 10px 15px;
-    cursor: pointer;
-    border-right: 1px solid #444;
-  }
-
-  .tab.active {
-    background: #007acc;
-  }
-
-  .editor {
-    flex: 1;
-    display: none;
-  }
-
-  .editor.active {
-    display: flex;
-  }
-
-  .lines {
-    background: #252526;
-    color: #858585;
-    padding: 10px 5px;
-    text-align: right;
-    user-select: none;
-    overflow: hidden;
-  }
-
-  .lines div {
-    height: 18px;
-  }
-
-  textarea {
-    flex: 1;
-    background: #1e1e1e;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    font-size: 14px;
-    resize: none;
-    outline: none;
-    line-height: 18px;
-  }
-
-  .toolbar {
-    background: #2d2d2d;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  button {
-    background: #007acc;
-    border: none;
-    color: white;
-    padding: 6px 12px;
-    cursor: pointer;
-  }
-
-  iframe {
-    flex: 1;
-    border: none;
-    background: white;
-  }
-
-  /* 🔥 ADDED (no change to your structure) */
-  #sizeInfo {
-    font-size: 12px;
-    opacity: 0.8;
-    margin-left: 10px;
-  }
-</style>
+    <meta charset="UTF-8">
+    <title>Pro Live Editor</title>
+    <style>
+        body{margin:0;font-family:Consolas,monospace;background:#1e1e1e;color:#fff;display:flex;height:100vh;overflow:hidden;}
+        .left{width:50%;display:flex;flex-direction:column;border-right:2px solid #333;min-width:150px;}
+        .right{flex:1;display:flex;flex-direction:column;min-width:150px;}
+        .resizer{width:6px;background:#444;cursor:col-resize;touch-action:none;}
+        .resizer.active{background:#007acc;}
+        .tabs{display:flex;background:#2d2d2d;}
+        .tab{padding:10px 15px;cursor:pointer;border-right:1px solid #444;}
+        .tab.active{background:#007acc;}
+        .editor{flex:1;display:none;}
+        .editor.active{display:flex;}
+        .lines{background:#252526;color:#858585;padding:10px 5px;text-align:right;user-select:none;overflow:hidden;}
+        .lines div{height:18px;}
+        textarea{flex:1;background:#1e1e1e;color:#fff;border:none;padding:10px;font-size:14px;resize:none;outline:none;line-height:18px;}
+        .toolbar{background:#2d2d2d;padding:10px;display:flex;justify-content:space-between;align-items:center;}
+        button{background:#007acc;border:none;color:#fff;padding:6px 12px;cursor:pointer;}
+        iframe{flex:1;border:none;background:#fff;}
+        #sizeInfo{font-size:12px;opacity:.8;margin-left:10px;}
+    </style>
 </head>
 
 <body>
 
-<div class="left" id="leftPanel">
-
-  <div class="tabs">
-    <div class="tab active" onclick="switchTab('html')">HTML</div>
-    <div class="tab" onclick="switchTab('css')">CSS</div>
-    <div class="tab" onclick="switchTab('js')">JS</div>
-  </div>
-
-  <div class="editor active" id="htmlEditor">
-    <div class="lines" id="htmlLines"></div>
-    <textarea id="htmlCode"><h1>Hello 👋</h1></textarea>
-  </div>
-
-  <div class="editor" id="cssEditor">
-    <div class="lines" id="cssLines"></div>
-    <textarea id="cssCode">body { text-align:center; color:red; }</textarea>
-  </div>
-
-  <div class="editor" id="jsEditor">
-    <div class="lines" id="jsLines"></div>
-    <textarea id="jsCode">console.log("Hello JS");</textarea>
-  </div>
-
-</div>
-
-<div class="resizer" id="dragbar"></div>
-
-<div class="right" id="rightPanel">
-
-  <div class="toolbar">
-    <div>
-      <span>Live Preview</span>
-      <span id="sizeInfo"></span> <!-- 🔥 ADDED ONLY -->
+    <div class="left" id="leftPanel">
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('html')">HTML</div>
+            <div class="tab" onclick="switchTab('css')">CSS</div>
+            <div class="tab" onclick="switchTab('js')">JS</div>
+        </div>
+        <div class="editor active" id="htmlEditor">
+            <div class="lines" id="htmlLines"></div>
+            <textarea id="htmlCode"><h1>Hello 👋</h1></textarea>
+        </div>
+        <div class="editor" id="cssEditor">
+            <div class="lines" id="cssLines"></div>
+            <textarea id="cssCode">body { text-align:center; color:red; }</textarea>
+        </div>
+        <div class="editor" id="jsEditor">
+            <div class="lines" id="jsLines"></div>
+            <textarea id="jsCode">console.log("Hello JS");</textarea>
+        </div>
     </div>
-    <button onclick="runCode()">Run ▶</button>
-  </div>
 
-  <iframe id="output"></iframe>
-</div>
+    <div class="resizer" id="dragbar"></div>
 
-<script>
+    <div class="right" id="rightPanel">
+        <div class="toolbar">
+            <div>
+                <span>Live Preview</span>
+                <span id="sizeInfo"></span>
+            </div>
+            <button onclick="runCode()">Run ▶</button>
+        </div>
+        <iframe id="output"></iframe>
+    </div>
 
-/* ---------------- TAB SWITCH ---------------- */
-const tabs = document.querySelectorAll(".tab");
-
-function switchTab(tab) {
-  tabs.forEach(t => t.classList.remove("active"));
-  document.querySelectorAll(".editor").forEach(e => e.classList.remove("active"));
-
-  document.getElementById(tab + "Editor").classList.add("active");
-  event.target.classList.add("active");
-}
-
-/* ---------------- LINE NUMBERS ---------------- */
-function updateLines(textarea, linesDiv) {
-  const count = textarea.value.split("\n").length;
-  linesDiv.innerHTML = "";
-  for (let i = 1; i <= count; i++) {
-    const div = document.createElement("div");
-    div.textContent = i;
-    linesDiv.appendChild(div);
-  }
-}
-
-function syncScroll(textarea, linesDiv) {
-  linesDiv.scrollTop = textarea.scrollTop;
-}
-
-function setupEditor(codeId, linesId) {
-  const textarea = document.getElementById(codeId);
-  const linesDiv = document.getElementById(linesId);
-
-  function refresh() {
-    updateLines(textarea, linesDiv);
-    runCode();
-  }
-
-  textarea.addEventListener("input", refresh);
-  textarea.addEventListener("scroll", () => syncScroll(textarea, linesDiv));
-
-  refresh();
-}
-
-/* ---------------- LIVE PREVIEW ---------------- */
-function runCode() {
-  const html = document.getElementById("htmlCode").value;
-  const css = "<style>" + document.getElementById("cssCode").value + "</style>";
-  const js = "<script>" + document.getElementById("jsCode").value + "<\/script>";
-
-  const doc = document.getElementById("output").contentDocument;
-  doc.open();
-  doc.write(html + css + js);
-  doc.close();
-}
-
-setupEditor("htmlCode", "htmlLines");
-setupEditor("cssCode", "cssLines");
-setupEditor("jsCode", "jsLines");
-
-/* ---------------- SIZE DISPLAY (ADDED ONLY) ---------------- */
-function updateSize() {
-  const rightPanel = document.getElementById("rightPanel");
-  const sizeInfo = document.getElementById("sizeInfo");
-
-  const w = Math.floor(rightPanel.clientWidth);
-  const h = Math.floor(rightPanel.clientHeight);
-
-  sizeInfo.textContent = `${w}px × ${h}px`;
-}
-
-/* ---------------- SMOOTH DRAG ---------------- */
-const dragbar = document.getElementById("dragbar");
-const left = document.getElementById("leftPanel");
-const right = document.getElementById("rightPanel");
-
-let isDragging = false;
-let latestX = 0;
-let rafId = null;
-
-dragbar.addEventListener("pointerdown", (e) => {
-  isDragging = true;
-  dragbar.classList.add("active");
-  document.body.style.cursor = "col-resize";
-
-  latestX = e.clientX;
-  dragbar.setPointerCapture(e.pointerId);
-});
-
-dragbar.addEventListener("pointermove", (e) => {
-  if (!isDragging) return;
-
-  latestX = e.clientX;
-
-  if (!rafId) {
-    rafId = requestAnimationFrame(updateLayout);
-  }
-});
-
-dragbar.addEventListener("pointerup", stopDrag);
-dragbar.addEventListener("pointercancel", stopDrag);
-
-function updateLayout() {
-  if (!isDragging) {
-    rafId = null;
-    return;
-  }
-
-  let newWidth = latestX;
-
-  const min = window.innerWidth * 0.2;
-  const max = window.innerWidth * 0.8;
-
-  if (newWidth < min) newWidth = min;
-  if (newWidth > max) newWidth = max;
-
-  left.style.width = newWidth + "px";
-  right.style.width =
-    (window.innerWidth - newWidth - dragbar.offsetWidth) + "px";
-
-  updateSize(); // 🔥 LIVE SIZE UPDATE
-
-  rafId = requestAnimationFrame(updateLayout);
-}
-
-function stopDrag() {
-  isDragging = false;
-  dragbar.classList.remove("active");
-  document.body.style.cursor = "default";
-
-  if (rafId) cancelAnimationFrame(rafId);
-  rafId = null;
-}
-
-/* INIT */
-updateSize();
-window.addEventListener("resize", updateSize);
-
-</script>
+    <script>
+        /* ---------------- TAB SWITCH ---------------- */
+        const tabs=document.querySelectorAll(".tab");function switchTab(tab){tabs.forEach(t=>t.classList.remove("active"));document.querySelectorAll(".editor").forEach(e=>e.classList.remove("active"));document.getElementById(tab+"Editor").classList.add("active");event.target.classList.add("active");}
+        /* ---------------- LINE NUMBERS ---------------- */
+        function updateLines(t,e){const n=t.value.split("\n").length;e.innerHTML="";for(let t=1;t<=n;t++){const n=document.createElement("div");n.textContent=t,e.appendChild(n)}}function syncScroll(t,e){e.scrollTop=t.scrollTop}function setupEditor(t,e){const n=document.getElementById(t),c=document.getElementById(e);function o(){updateLines(n,c),runCode()}n.addEventListener("input",o),n.addEventListener("scroll",(()=>syncScroll(n,c))),o()}
+        /* ---------------- LIVE PREVIEW ---------------- */
+        function runCode(){const e=document.getElementById("htmlCode").value,t="<style>"+document.getElementById("cssCode").value+"</style>",n="<script>"+document.getElementById("jsCode").value+"<\/script>",o=document.getElementById("output").contentDocument;o.open(),o.write(e+t+n),o.close()}setupEditor("htmlCode","htmlLines"),setupEditor("cssCode","cssLines"),setupEditor("jsCode","jsLines");
+        /* ---------------- SIZE DISPLAY (ADDED ONLY) ---------------- */
+        function updateSize(){const e=document.getElementById("rightPanel"),t=document.getElementById("sizeInfo");const n=Math.floor(e.clientWidth),o=Math.floor(e.clientHeight);t.textContent=`${n}px × ${o}px`}
+        /* ---------------- SMOOTH DRAG ---------------- */
+        const dragbar=document.getElementById("dragbar"),left=document.getElementById("leftPanel"),right=document.getElementById("rightPanel");let isDragging=!1,latestX=0,rafId=null;dragbar.addEventListener("pointerdown",e=>{isDragging=!0,dragbar.classList.add("active"),document.body.style.cursor="col-resize",latestX=e.clientX,dragbar.setPointerCapture(e.pointerId)}),dragbar.addEventListener("pointermove",e=>{if(!isDragging)return;latestX=e.clientX,rafId||(rafId=requestAnimationFrame(updateLayout))}),dragbar.addEventListener("pointerup",stopDrag),dragbar.addEventListener("pointercancel",stopDrag);function updateLayout(){if(!isDragging){rafId=null;return}let e=latestX,t=328,n=window.innerWidth-328;e<t&&(e=t),e>n&&(e=n),left.style.width=e+"px",right.style.width=window.innerWidth-e-dragbar.offsetWidth+"px",updateSize(),rafId=requestAnimationFrame(updateLayout)}function stopDrag(){isDragging=!1,dragbar.classList.remove("active"),document.body.style.cursor="default",rafId&&(cancelAnimationFrame(rafId),rafId=null)}
+        /* INIT */
+        updateSize();
+        window.addEventListener("resize", updateSize);
+    </script>
 
 </body>
 </html>
